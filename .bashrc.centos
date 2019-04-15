@@ -1,0 +1,82 @@
+# .bashrc
+
+#mes variabbles de couleur
+COULEUR_BLEU_FOND_STD="\033[0;34m"
+COULEUR_ROUGE_FOND_STD="\033[0;31m"
+COULEUR_JAUNE_FOND_ROUGE="\033[41;33m"
+COULEUR_CYAN_FOND_STD="\033[0;36m"
+COULEUR_CYAN_FOND_BLEU="\033[44;36m"
+COULEUR_NOIR_FOND_BLANC="\033[47;30m"
+COULEUR_RESET="\033[0m"
+
+# User specific aliases and functions
+alias cd..='cd ..'
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+alias cls='clear'
+alias lapute='echo "Patience...";grc netstat -lapute'
+alias plantu='echo "Patience...";grc netstat -plantu'
+alias rechercher='echo "Resultats:";cd /;find -name'
+alias ifconfig='grc ifconfig'
+alias hist='history'
+alias ll='grc ls -lh'
+alias la='grc ls -alh'
+alias ls='grc ls -h '
+alias dig='grc dig'
+alias servicesactifs='systemctl list-unit-files -t service | grep enabled'
+alias man='LANG=fr_FR.UTF-8 man'
+alias date='date +"On est le %A %d %B %Y et il est %X"'
+alias edit='vim'
+alias editbashrc='vim ~/.bashrc'
+alias sourcebashrc='source ~/.bashrc'
+alias rm='rm -iv --preserve-root'
+alias yum='yum --color=always'
+alias du='grc du -c -h -d 1 --exclude="*/proc/*"'
+alias df='grc df -h'
+alias systemctl='grc systemctl'
+alias ip='grc ip'
+alias lvdisplay='lvdisplay -C -O lv_name'
+alias vgdisplay='vgdisplay -C -O vg_name'
+alias pvdisplay='pvdisplay -C -O pv_name'
+alias mountshares='mount -t vboxsf Temp /mnt/Temp/'
+
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+#PATH personnel
+PATH=$PATH:~/scripts
+
+#Ligne de commande colorée
+PS1="\[${COULEUR_JAUNE_FOND_ROUGE}\][\t]\[${COULEUR_NOIR_FOND_BLANC}\][\u@\h]\[${COULEUR_CYAN_FOND_BLEU}\][\w][\$]\[${COULEUR_RESET}\] \[${COULEUR_ROUGE_FOND_STD}\] \n> \[${COULEUR_RESET}\]"
+
+#Historique coloré
+export HISTTIMEFORMAT=`echo -e ${COULEUR_BLEU_FOND_STD}[%F]${COULEUR_RESET}[%T]: ${COULEUR_ROUGE_FOND_STD} `
+
+#tailel Historique
+export HISTSIZE=5000
+shopt histappend > /tmp/null
+
+#activaton du verouillage numerique du clavier
+if [ "$SSH_CONNECTION" = "" ]
+then
+setleds +num -scroll -caps
+fi
+#/etc/init.d/keyboard.sh
+
+#script qui affiche les infos systeme
+/etc/init.d/neofetch
+
+#Montage du lecteur partagé virtual box
+deja_monte=$(mount -l | grep 'Temp on /mnt/Temp type vboxsf')
+if [ "$deja_monte" != "" ]
+then
+echo 'Lecteur partagé "Temp" est déjà monté  sur "/mnt/Temp" !'
+else
+echo 'Le lecteur partagé "Temp" a été monté sur "/mnt/Temp" !'
+mount -t vboxsf Temp /mnt/Temp
+fi
+
